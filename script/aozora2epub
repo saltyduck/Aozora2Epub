@@ -1,0 +1,153 @@
+#!perl
+use utf8;
+use strict;
+use warnings;
+use Aozora2Epub;
+use Getopt::Long;
+use Path::Tiny;
+
+binmode(STDERR, "utf8");
+binmode(STDOUT, "utf8");
+
+my $cmd_name = path($0)->basename;
+
+my ($output, $title, $author, $cover);
+GetOptions("output=s" => \$output,
+           "title=s" => \$title,
+           "author=s" => \$author,
+           "cover=s" => \$cover)
+    or usage(1);
+
+my @files = @ARGV;
+@files or usage(1);
+
+my $ae = Aozora2Epub->new();
+$ae->title($title) if $title;
+$ae->author($author) if $author;
+
+for my $f (@files) {
+    $ae->append($f);
+}
+
+my %options;
+$options{output} = $output if $output;
+if ($cover) {
+    unless (do { my $fh; open $fh, "<", $cover and close $fh; }) {
+        print STDERR "$cover: $!\n";
+        usage(1);
+    }
+    $options{cover} = $cover
+}
+
+$ae->to_epub(%options);
+exit 0;
+
+sub usage {
+    my $exit_status = shift;
+    print STDERR <<"USAGE";
+Usage: $cmd_name [options] aozora-url ...
+
+Options:
+ --output   出力するEPUBファイル名。デフォルトは`タイトル'.epub
+ --title    タイトル。デフォルトは本のタイトル
+ --author   著者。デフォルトは本の著者
+ --cover    表紙ページのjpegファイル名。デフォルトは表紙ページ無し
+USAGE
+
+    exit($exit_status);
+}
+
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+aozora2epub - Convert Aozora Bunko XHTML to EPUB
+
+=head1 SYNOPSIS
+
+  aozora2epub https://www.aozora.gr.jp/cards/001569/files/59761_74795.html
+  aozora2epub https://www.aozora.gr.jp/cards/001569/card59761.html # 上と同じ
+  aozora2epub 001569/card59761.html # これも上と同じ
+  
+  # 合本の作成
+  aozora2epub --title "中谷宇吉郎作品集" 001569/card59761.html 001569/files/59572_72817.html
+
+
+=head1 DESCRIPTION
+
+aozora2epub は青空文庫のXHTML形式の本をEPUBに変換するコマンドです。
+
+複数の本を指定すると、合本が作られます。
+
+=head1 ARGUMENTS
+
+本の指定は以下のいずれかの形式です。
+いずれも、URL先頭の B<https://www.aozora.gr.jp/cards/>の部分を省略することも可能です。
+
+=over 4
+
+=item B<図書カードのURL>
+
+青空文庫の図書カードのURLです。以下に例を示します。
+
+  https://www.aozora.gr.jp/cards/001569/card59761.html
+  001569/card59761.html
+
+=item B<XHTMLのURL>
+
+青空文庫のXHTMLファイルのURLです。以下に例を示します。
+
+  https://www.aozora.gr.jp/cards/001569/files/59761_74795.html
+  001569/files/59761_74795.html
+
+=back
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<--title>
+
+出力するEPUBファイルのタイトルを指定します。
+デフォルトは、引数に指定した青空文庫の本のタイトルです。
+合本の場合は最初に指定した本のタイトルが使われます。
+
+=item B<--author>
+
+出力するEPUBファイルの著者を指定します。
+デフォルトは、引数に指定した青空文庫の本の著者です。
+合本の場合は最初に指定した本の著者が使われます。
+
+=item B<--cover>
+
+表紙にするjpegファイルを指定します。デフォルトは表紙無しです。
+
+=item B<--output>
+
+出力するEPUBファイルのファイル名を指定します。
+デフォルトは、タイトル.epub です。
+
+=back
+
+=head1 AUTHOR
+
+Yoshimasa Ueno E<lt>saltyduck@gmail.comE<gt>
+
+=head1 COPYRIGHT
+
+Copyright 2024- Yoshimasa Ueno
+
+=head1 LICENSE
+
+This is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=head1 SEE ALSO
+
+L<Aozora2Epub>
+
+=cut
+
+

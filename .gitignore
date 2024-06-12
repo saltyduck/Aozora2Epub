@@ -1,4 +1,12 @@
-/Aozora2Epub-*
+*.epub
+poi*
+epub-tmp/
+*~
+#*#
+/*.jpeg
+/*.jpg
+.DS_Store
+/App-Aozora2EPUB-*
 /.build
 /_build*
 /Build

@@ -1,5 +1,5 @@
 {
-   "abstract" : "Blah blah blah",
+   "abstract" : "Convert AozoraBunko xhtml to epub",
    "author" : [
       "Yoshimasa Ueno <saltyduck@gmail.com>"
    ],
@@ -26,7 +26,8 @@
    "prereqs" : {
       "configure" : {
          "requires" : {
-            "Module::Build::Tiny" : "0.034"
+            "ExtUtils::MakeMaker" : "0",
+            "File::ShareDir::Install" : "0.06"
          }
       },
       "develop" : {
@@ -37,11 +38,21 @@
       },
       "runtime" : {
          "requires" : {
-            "perl" : "5.012"
+            "Archive::Zip" : "0",
+            "Cache::FileCache" : "0",
+            "File::ShareDir" : "0",
+            "HTML::Escape" : "0",
+            "HTML::Selector::XPath" : "0",
+            "HTML::TreeBuilder::XPath" : "0",
+            "HTTP::Tiny" : "0",
+            "Path::Tiny" : "0",
+            "Text::Xslate" : "0",
+            "UUID" : "0"
          }
       },
       "test" : {
          "requires" : {
+            "Test::Base" : "0",
             "Test::More" : "0.96"
          }
       }
