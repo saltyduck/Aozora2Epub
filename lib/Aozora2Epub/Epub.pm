@@ -139,7 +139,7 @@ sub build_from_doc {
         sections => $toc,
         has_sections => (@$toc ? 1 : 0),
         files => $self->{doc}->files,
-        has_okuzuke => $doc->bib_info || $doc->notation_notes,
+        has_okuzuke => $doc->bib_info,
         bib_info => mark_raw($self->{doc}->bib_info),
         notation_notes => mark_raw($self->{doc}->notation_notes),
         assets => _add_name_to_array($self->assets),

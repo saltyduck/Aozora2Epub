@@ -20,7 +20,7 @@ sub _to_html {
     unless ($e->isa('HTML::Element')) {
         return $e;
     }
-    return $e->as_HTML('<>&');
+    return $e->as_HTML('<>&', undef, {});
 }
 
 sub as_html {

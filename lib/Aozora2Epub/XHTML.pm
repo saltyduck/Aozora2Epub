@@ -98,11 +98,13 @@ sub process_doc {
             my $bio = shift;
             my $hr = $bio->find_by_tag_name('hr');
             $hr->detach if $hr;
-            $bib_info = $bio->as_HTML('<>&');
+            $bib_info = $bio->as_HTML('<>&', undef, {});
+            $bib_info =~ s{^<div class="bibliographical_information"><br /> }{}s;
+            $bib_info =~ s{<br /><br /><br /></div>$}{}s;
         })
         ->process('body > div.notation_notes', sub {
             my $nn = shift;
-            $notation_notes = $nn->as_HTML('<>&');
+            $notation_notes = $nn->as_HTML('<>&', undef, {});
         })
         ->select('div.main_text')
         ->children

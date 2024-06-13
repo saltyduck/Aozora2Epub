@@ -4,7 +4,7 @@ use File::Find;
 
 sub use_pm {
     my $f = $File::Find::name;
-    return unless $f =~ m{lib/(.*)\.pm$};
+    return unless $f =~ m{lib/([\w/]+)\.pm$};
     my $mod = $1;
     $mod =~ s{/}{::}sg;
     use_ok $mod;

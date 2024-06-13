@@ -11,22 +11,27 @@ binmode(STDOUT, "utf8");
 
 my $cmd_name = path($0)->basename;
 
-my ($output, $title, $author, $cover);
+my ($output, $title, $author, $cover, $no_okuzuke);
 GetOptions("output=s" => \$output,
            "title=s" => \$title,
            "author=s" => \$author,
-           "cover=s" => \$cover)
+           "cover=s" => \$cover,
+           "no-okuzuke" => \$no_okuzuke)
     or usage(1);
 
 my @files = @ARGV;
 @files or usage(1);
 
-my $ae = Aozora2Epub->new();
+my $ae = (@files > 1 ? Aozora2Epub->new() : Aozora2Epub->new(shift @files));
 $ae->title($title) if $title;
 $ae->author($author) if $author;
 
 for my $f (@files) {
     $ae->append($f);
+}
+
+if ($no_okuzuke) {
+    $ae->bib_info(undef);
 }
 
 my %options;
@@ -48,10 +53,11 @@ sub usage {
 Usage: $cmd_name [options] aozora-url ...
 
 Options:
- --output   出力するEPUBファイル名。デフォルトは`タイトル'.epub
- --title    タイトル。デフォルトは本のタイトル
- --author   著者。デフォルトは本の著者
- --cover    表紙ページのjpegファイル名。デフォルトは表紙ページ無し
+ --title      タイトル。デフォルトは本のタイトル
+ --author     著者。デフォルトは本の著者
+ --cover      表紙ページのjpegファイル名。デフォルトは表紙ページ無し
+ --output     出力するEPUBファイル名。デフォルトは`タイトル'.epub
+ --no-okuzuke 奥付を含めない
 USAGE
 
     exit($exit_status);
@@ -128,6 +134,10 @@ aozora2epub は青空文庫のXHTML形式の本をEPUBに変換するコマン�
 
 出力するEPUBファイルのファイル名を指定します。
 デフォルトは、タイトル.epub です。
+
+=item B<--no-okuzuke>
+
+EPUBに奥付を含めません。
 
 =back
 
