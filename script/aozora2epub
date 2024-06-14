@@ -11,16 +11,20 @@ binmode(STDOUT, "utf8");
 
 my $cmd_name = path($0)->basename;
 
-my ($output, $title, $author, $cover, $no_okuzuke);
-GetOptions("output=s" => \$output,
-           "title=s" => \$title,
-           "author=s" => \$author,
-           "cover=s" => \$cover,
-           "no-okuzuke" => \$no_okuzuke)
-    or usage(1);
+my ($output, $title, $author, $cover, $no_okuzuke, $help);
+Getopt::Long::Configure ("bundling");
+GetOptions("o|output=s" => \$output,
+           "t|title=s" => \$title,
+           "a|author=s" => \$author,
+           "c|cover=s" => \$cover,
+           "no-okuzuke" => \$no_okuzuke,
+           "h|help" => \$help,
+       ) or usage(1, 1);
+
+$help and usage(0);
 
 my @files = @ARGV;
-@files or usage(1);
+@files or usage(1, 1, "$cmd_name requires one or more arguments");
 
 my $ae = (@files > 1 ? Aozora2Epub->new() : Aozora2Epub->new(shift @files));
 $ae->title($title) if $title;
@@ -48,18 +52,23 @@ $ae->to_epub(%options);
 exit 0;
 
 sub usage {
-    my $exit_status = shift;
-    print STDERR <<"USAGE";
-Usage: $cmd_name [options] aozora-url ...
+    my ($exit_status, $short, $mes) = @_;
 
+    print STDERR $mes, "\n" if $mes;
+    print STDERR "Usage: $cmd_name [options] aozora-url ...\n\n";
+    if ($short) {
+        print STDERR "Try `$cmd_name --help` for more options.\n";
+    } else {
+        print STDERR <<"USAGE";
 Options:
- --title      タイトル。デフォルトは本のタイトル
- --author     著者。デフォルトは本の著者
- --cover      表紙ページのjpegファイル名。デフォルトは表紙ページ無し
- --output     出力するEPUBファイル名。デフォルトは`タイトル'.epub
- --no-okuzuke 奥付を含めない
+ -t,--title      タイトル。デフォルトは本のタイトル
+ -a,--author     著者。デフォルトは本の著者
+ -c,--cover      表紙ページのjpegファイル名。デフォルトは表紙ページ無し
+ -o,--output     出力するEPUBファイル名。デフォルトは`タイトル'.epub
+ --no-okuzuke    奥付を含めない
+ -h,--help       このヘルプを表示
 USAGE
-
+    }
     exit($exit_status);
 }
 
@@ -74,8 +83,8 @@ aozora2epub - Convert Aozora Bunko XHTML to EPUB
 =head1 SYNOPSIS
 
   aozora2epub https://www.aozora.gr.jp/cards/001569/files/59761_74795.html
-  aozora2epub https://www.aozora.gr.jp/cards/001569/card59761.html # 上と同じ
-  aozora2epub 001569/card59761.html # これも上と同じ
+  aozora2epub https://www.aozora.gr.jp/cards/001569/card59761.html # 図書カードのURLでもOK
+  aozora2epub 001569/card59761.html # 上と同じ
   
   # 合本の作成
   aozora2epub --title "中谷宇吉郎作品集" 001569/card59761.html 001569/files/59572_72817.html
@@ -89,8 +98,8 @@ aozora2epub は青空文庫のXHTML形式の本をEPUBに変換するコマン�
 
 =head1 ARGUMENTS
 
-本の指定は以下のいずれかの形式です。
-いずれも、URL先頭の B<https://www.aozora.gr.jp/cards/>の部分を省略することも可能です。
+本の指定は以下のいずれかの形式で行います。
+いずれも、URL先頭の B<https://www.aozora.gr.jp/cards/>の部分を省略することが可能です。
 
 =over 4
 
@@ -99,14 +108,16 @@ aozora2epub は青空文庫のXHTML形式の本をEPUBに変換するコマン�
 青空文庫の図書カードのURLです。以下に例を示します。
 
   https://www.aozora.gr.jp/cards/001569/card59761.html
-  001569/card59761.html
+  
+  001569/card59761.html # 先頭部分を省略
 
 =item B<XHTMLのURL>
 
 青空文庫のXHTMLファイルのURLです。以下に例を示します。
 
   https://www.aozora.gr.jp/cards/001569/files/59761_74795.html
-  001569/files/59761_74795.html
+  
+  001569/files/59761_74795.html # 先頭部分を省略
 
 =back
 
@@ -114,23 +125,23 @@ aozora2epub は青空文庫のXHTML形式の本をEPUBに変換するコマン�
 
 =over 4
 
-=item B<--title>
+=item B<-t>, B<--title>
 
 出力するEPUBファイルのタイトルを指定します。
 デフォルトは、引数に指定した青空文庫の本のタイトルです。
 合本の場合は最初に指定した本のタイトルが使われます。
 
-=item B<--author>
+=item B<-a>, B<--author>
 
 出力するEPUBファイルの著者を指定します。
 デフォルトは、引数に指定した青空文庫の本の著者です。
 合本の場合は最初に指定した本の著者が使われます。
 
-=item B<--cover>
+=item B<-c>, B<--cover>
 
 表紙にするjpegファイルを指定します。デフォルトは表紙無しです。
 
-=item B<--output>
+=item B<-o>, B<--output>
 
 出力するEPUBファイルのファイル名を指定します。
 デフォルトは、タイトル.epub です。
@@ -138,6 +149,10 @@ aozora2epub は青空文庫のXHTML形式の本をEPUBに変換するコマン�
 =item B<--no-okuzuke>
 
 EPUBに奥付を含めません。
+
+=item B<-h>, B<--help>
+
+ヘルプを表示します。
 
 =back
 
@@ -159,5 +174,4 @@ it under the same terms as Perl itself.
 L<Aozora2Epub>
 
 =cut
-
 
