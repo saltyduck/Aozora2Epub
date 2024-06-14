@@ -6,7 +6,7 @@ epub-tmp/
 /*.jpeg
 /*.jpg
 .DS_Store
-/App-Aozora2EPUB-*
+/Aozora2Epub-*
 /.build
 /_build*
 /Build
