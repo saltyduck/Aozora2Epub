@@ -13,7 +13,7 @@ install_share dist => "share";
 
 
 my %WriteMakefileArgs = (
-  "ABSTRACT" => "Convert AozoraBunko xhtml to epub",
+  "ABSTRACT" => "Convert Aozora Bunko XHTML to EPUB",
   "AUTHOR" => "Yoshimasa Ueno <saltyduck\@gmail.com>",
   "CONFIGURE_REQUIRES" => {
     "ExtUtils::MakeMaker" => 0,
@@ -28,13 +28,22 @@ my %WriteMakefileArgs = (
   "PREREQ_PM" => {
     "Archive::Zip" => 0,
     "Cache::FileCache" => 0,
+    "Carp" => 0,
+    "Class::Accessor" => 0,
+    "Encode" => 0,
+    "File::Find" => 0,
     "File::ShareDir" => 0,
+    "Getopt::Long" => 0,
+    "HTML::Element" => 0,
     "HTML::Escape" => 0,
     "HTML::Selector::XPath" => 0,
     "HTML::TreeBuilder::XPath" => 0,
+    "HTTP::Date" => 0,
     "HTTP::Tiny" => 0,
+    "IO::Socket::SSL" => 0,
     "Path::Tiny" => 0,
     "Text::Xslate" => 0,
+    "URI" => 0,
     "UUID" => 0
   },
   "TEST_REQUIRES" => {
@@ -51,15 +60,24 @@ my %WriteMakefileArgs = (
 my %FallbackPrereqs = (
   "Archive::Zip" => 0,
   "Cache::FileCache" => 0,
+  "Carp" => 0,
+  "Class::Accessor" => 0,
+  "Encode" => 0,
+  "File::Find" => 0,
   "File::ShareDir" => 0,
+  "Getopt::Long" => 0,
+  "HTML::Element" => 0,
   "HTML::Escape" => 0,
   "HTML::Selector::XPath" => 0,
   "HTML::TreeBuilder::XPath" => 0,
+  "HTTP::Date" => 0,
   "HTTP::Tiny" => 0,
+  "IO::Socket::SSL" => 0,
   "Path::Tiny" => 0,
   "Test::Base" => 0,
   "Test::More" => "0.96",
   "Text::Xslate" => 0,
+  "URI" => 0,
   "UUID" => 0
 );
 

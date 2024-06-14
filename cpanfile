@@ -1,13 +1,22 @@
-requires 'HTML::Escape';
-requires 'HTTP::Tiny';
-requires 'Cache::FileCache';
-requires 'Text::Xslate';
-requires 'File::ShareDir';
-requires 'Path::Tiny';
-requires 'UUID';
 requires 'Archive::Zip';
-requires 'HTML::TreeBuilder::XPath';
+requires 'Cache::FileCache';
+requires 'Carp';
+requires 'Encode';
+requires 'File::Find';
+requires 'File::ShareDir';
+requires 'Getopt::Long';
+requires 'HTML::Element';
+requires 'HTTP::Date';
+requires 'HTML::Escape';
 requires 'HTML::Selector::XPath';
+requires 'HTML::TreeBuilder::XPath';
+requires 'HTTP::Tiny';
+requires 'IO::Socket::SSL';
+requires 'Path::Tiny';
+requires 'Text::Xslate';
+requires 'URI';
+requires 'UUID';
+requires 'Class::Accessor';
 
 on test => sub {
     requires 'Test::More', '0.96';
