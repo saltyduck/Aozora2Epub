@@ -9,7 +9,7 @@ use HTML::Element;
 use base qw(Class::Accessor);
 __PACKAGE__->mk_accessors(qw/title author content bib_info notation_notes gaiji fig/);
 
-our $VERSION = "0.02";
+our $VERSION = "0.03";
 
 sub new {
     my ($class, $url) = @_;
