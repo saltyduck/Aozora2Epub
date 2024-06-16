@@ -56,13 +56,15 @@
             "Path::Tiny" : "0",
             "Text::Xslate" : "0",
             "URI" : "0",
-            "UUID" : "0"
+            "UUID" : "0",
+            "perl" : "5.024"
          }
       },
       "test" : {
          "requires" : {
             "Test::Base" : "0",
-            "Test::More" : "0.96"
+            "Test::More" : "0.96",
+            "YAML" : "0"
          }
       }
    },
