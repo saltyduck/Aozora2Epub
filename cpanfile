@@ -13,7 +13,7 @@ requires 'HTML::Selector::XPath';
 requires 'HTML::TreeBuilder::XPath';
 requires 'HTTP::Tiny';
 requires 'IO::Socket::SSL';
-requires 'Path::Tiny';
+requires 'Path::Tiny', '0.125';
 requires 'Text::Xslate';
 requires 'URI';
 requires 'UUID';
