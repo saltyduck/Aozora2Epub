@@ -124,6 +124,13 @@ sub process_doc {
         ->process('h3', \&_process_header)
         ->process('h4', \&_process_header)
         ->process('h5', \&_process_header)
+        ->process('//div[contains(@style, "margin")]', => sub {
+            my $div = shift;
+            my $style = $div->attr('style');
+            $style =~ s/margin-left/margin-top/sg;
+            $style =~ s/margin-right/margin-bottom/sg;
+            $div->attr('style', $style);
+        })
         #->process('span.notes', sub {
         #    print STDERR shift->as_HTML('&<>'),"\n";
         #})

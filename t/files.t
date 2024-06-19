@@ -151,3 +151,15 @@ __DATA__
 --- expected
 - <img alt="※(「てへん＋劣」、第3水準1-84-77)" class="gaiji" src="../gaiji/1-84/1-84-77.png" />
 
+=== jisage
+--- html
+<div style="margin-left: 3em">あいうえお</div>
+--- expected
+- '<div style="margin-top: 3em">あいうえお</div>'
+
+=== chitsuki
+--- html
+<div style="margin-right: 3em">あいうえお</div>
+--- expected
+- '<div style="margin-bottom: 3em">あいうえお</div>'
+
