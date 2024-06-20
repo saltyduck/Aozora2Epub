@@ -3,6 +3,7 @@ requires 'Archive::Zip';
 requires 'Cache::FileCache';
 requires 'Carp';
 requires 'Encode';
+requires 'Encode::JISX0213', '0.04';
 requires 'File::Find';
 requires 'File::ShareDir';
 requires 'Getopt::Long';

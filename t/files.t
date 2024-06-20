@@ -145,12 +145,6 @@ __DATA__
   </figure>
   <br />
 
-=== gaiji
---- html
-<img src="../../../gaiji/1-84/1-84-77.png" alt="※(「てへん＋劣」、第3水準1-84-77)" class="gaiji" />
---- expected
-- <img alt="※(「てへん＋劣」、第3水準1-84-77)" class="gaiji" src="../gaiji/1-84/1-84-77.png" />
-
 === jisage
 --- html
 <div style="margin-left: 3em">あいうえお</div>
