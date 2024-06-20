@@ -64,7 +64,7 @@ sub _process_img {
     $img->attr('src', "../images/$src");
     # find caption
     my $br = $img->right;
-    return unless $br->tag eq 'br';
+    return unless $br && $br->isa('HTML::Element') && $br->tag eq 'br';
     my $caption = $br->right;
     return unless $caption;
     return unless $caption->isa('HTML::Element');
