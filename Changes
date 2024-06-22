@@ -1,6 +1,19 @@
 Revision history for Aozora2Epub
 
 {{$NEXT}}
+	
+	[ ENHANCEMENT ]
+	- 外字をunicodeに置き換える(kindle 5.13.6で表示可能なフォントのみ).
+	
+	[ FIX ]
+	- 見出しの連続中にHTML::Elementがあった場合にページ分割がなされないケースがあるバグを修正
+	- 図の後にいきなりテキストが来ている場合にdieするバグを修正
+	- ヘッダじゃないところの字下げが無視されていたので対応。chitsukiにも対応。
+	- Path::Tinyのmkdirは0.125以降なので要求バージョンに指定
+	
+	[ TESTING ]
+	- epub生成のテスト
+	- 青空文庫からフェッチするライブテスト追加
 
 0.03  2024-06-16 23:26:30 JST
         - perl 5.24以上が必要
