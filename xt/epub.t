@@ -15,6 +15,14 @@ $Aozora2Epub::AOZORA_GAIJI_URL = 'xt/input/gaiji/';
 sub epub_eq {
     my ($input_file, $expected, %epub_options) = @_;
 
+    if ($ENV{BUILD_EPUB}) {
+        Aozora2Epub::Gensym->reset_counter;
+        Aozora2Epub->new($input_file)
+            ->to_epub(output=>"xt/expected/$expected",
+                      %epub_options);
+        ok 1;
+        return;
+    }
     Aozora2Epub::Gensym->reset_counter;
     my $tb = Test::More->builder;
     my $zd = xt::ZipDiff->new;
@@ -34,5 +42,4 @@ epub_eq('02/files/02_000.html', '02_000.epub');
 epub_eq('02/files/02_000.html', '02_000-with-cover.epub',
         cover=>'xt/input/cover.jpg');
 
-ok 1;
 done_testing();
