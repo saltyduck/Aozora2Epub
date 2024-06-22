@@ -2,6 +2,7 @@ package Aozora2Epub::XHTML;
 use strict;
 use warnings;
 use utf8;
+use Aozora2Epub::CachedGet qw/http_get/;
 use Aozora2Epub::XHTML::Tree;
 use Aozora2Epub::Gensym;
 use Aozora2Epub::File;
@@ -67,7 +68,7 @@ sub new {
     my ($class, $url) = @_;
     my $base = $url;
     $base =~ s{[^/]+\.html$}{}s;
-    return $class->new_from_string(get($url), $base);
+    return $class->new_from_string(http_get($url), $base);
 }
 
 sub new_from_string {
@@ -298,16 +299,19 @@ sub split {
                     push @newcur, $c1;
                     last;
                 }
-                unless (_is_empty($c1)
-                        || $c->tag =~ m{h[123]}) {
-                    push @newcur, $c1;
-                    last;
-                }
+
                 if (_is_pagebreak($c1)) {
                     push @files, [@newcur] if @newcur;
                     @newcur = ();
                     last;
                 }
+
+                unless (_is_empty($c1)
+                        || $c1->tag =~ m{h[123]}) {
+                    push @newcur, $c1;
+                    last;
+                }
+
                 push @newcur, $c1;
             }
 

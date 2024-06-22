@@ -1,4 +1,4 @@
-*.epub
+/*.epub
 poi*
 epub-tmp/
 *~
@@ -13,3 +13,4 @@ epub-tmp/
 MYMETA.*
 !META.json
 /.prove
+/cover_db

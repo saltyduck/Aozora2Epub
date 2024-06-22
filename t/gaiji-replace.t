@@ -38,6 +38,12 @@ __DATA__
 --- expected
 \x{62be}
 
+=== non gaiji note
+--- html
+あああ<span class="notes">［＃ あああはママ］</span>
+--- expected
+あああ<span class="notes">［＃ あああはママ］</span>
+
 === within ruby
 --- html
 嘴<ruby><rb>鸚※</rb><rp>（</rp><rt>おうむ</rt><rp>）</rp></ruby><span class="notes">［＃「母＋鳥」、U+4CC7、217-9］</span>のごとく
@@ -85,7 +91,6 @@ __DATA__
 博物学者は<ruby><rb>※<img src="../../../gaiji/1-91/1-91-65.png" alt="※(「虫＋斯」、第3水準1-91-65)" class="gaiji" /></rb><rp>（</rp><rt>けむし</rt><rp>）</rp></ruby><span class="notes">［＃「虫＋占」、U+86C5、18-5］</span>の変じ
 --- expected
 博物学者は<ruby><rb>\x{86c5}\x{87d6}</rb><rp>（</rp><rt>けむし</rt><rp>）</rp></ruby>の変じ
-
 
 === kindle font broken jis
 --- html
