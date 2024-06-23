@@ -27,7 +27,25 @@ sub show_version {
     print "Running under Perl $^V ($^X)\n\n";
 }
 
+sub load_argv_from_stdin {
+
+    my @argv;
+    while(defined(my $line = <STDIN>)){
+        chomp $line;
+        $line =~ s/#.+$//; # comment
+        $line =~ s/^\s+//; # trim spaces
+        $line =~ s/\s+$//; # trim spaces
+
+        push @argv, $line if $line;
+    }
+    return @argv;
+}
+
 my @files = @ARGV;
+if (@files == 0 && !-t STDIN) {
+    @files = load_argv_from_stdin();
+}
+
 @files or usage(1, 1, "$cmd_name requires one or more arguments");
 
 my $ae = (@files > 1 ? Aozora2Epub->new() : Aozora2Epub->new(shift @files));
