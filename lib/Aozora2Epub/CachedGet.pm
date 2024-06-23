@@ -11,6 +11,8 @@ use parent 'Exporter';
 
 our @EXPORT = qw(http_get);
 
+our $VERSION = '0.03';
+
 our $CACHE;
 init_cache();
 

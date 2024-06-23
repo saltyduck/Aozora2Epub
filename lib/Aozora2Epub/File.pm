@@ -7,6 +7,8 @@ use HTML::Element;
 use base qw(Class::Accessor);
 __PACKAGE__->mk_accessors(qw/content name/);
 
+our $VERSION = '0.03';
+
 sub new {
     my ($class, $content) = @_;
     return bless {
