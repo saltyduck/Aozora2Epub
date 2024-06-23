@@ -6,6 +6,8 @@ use Aozora2Epub;
 use Getopt::Long;
 use Path::Tiny;
 
+our $VERSION = '0.03';
+
 binmode(STDERR, "utf8");
 binmode(STDOUT, "utf8");
 
@@ -23,7 +25,7 @@ GetOptions("o|output=s" => \$output,
        ) or usage(1, 1);
 
 sub show_version {
-    print "$cmd_name version $Aozora2Epub::VERSION ($0)\n";
+    print "$cmd_name version $VERSION ($0)\n";
     print "Running under Perl $^V ($^X)\n\n";
 }
 
