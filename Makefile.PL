@@ -28,7 +28,7 @@ my %WriteMakefileArgs = (
   "NAME" => "Aozora2Epub",
   "PREREQ_PM" => {
     "Archive::Zip" => 0,
-    "Cache::FileCache" => 0,
+    "Cache::Cache" => "1.08",
     "Carp" => 0,
     "Class::Accessor" => 0,
     "Encode" => 0,
@@ -62,7 +62,7 @@ my %WriteMakefileArgs = (
 
 my %FallbackPrereqs = (
   "Archive::Zip" => 0,
-  "Cache::FileCache" => 0,
+  "Cache::Cache" => "1.08",
   "Carp" => 0,
   "Class::Accessor" => 0,
   "Encode" => 0,

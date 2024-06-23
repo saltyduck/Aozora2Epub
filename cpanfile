@@ -1,6 +1,6 @@
 requires 'perl', '5.024';
 requires 'Archive::Zip';
-requires 'Cache::FileCache';
+requires 'Cache::Cache', '1.08'; # Cache::FileCache
 requires 'Carp';
 requires 'Encode';
 requires 'Encode::JISX0213', '0.04';
