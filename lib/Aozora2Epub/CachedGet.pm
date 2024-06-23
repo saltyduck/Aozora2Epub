@@ -19,6 +19,7 @@ sub init_cache {
         namespace          => 'aozora',
         default_expires_in => '30 days',
         cache_root         => $ENV{AOZORA2EPUB_CACHE} || path($ENV{HOME}, '.aozora-epub'),
+        directory_umask => 077,
         auto_purge_interval => '1 day',
     });
 }
