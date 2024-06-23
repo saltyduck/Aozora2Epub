@@ -64,6 +64,30 @@ sub kindle_unicode_hex2chr {
     return chr($unicode);
 }
 
+sub _conv_gaiji_title_author {
+    my ($unicode, $men, $ku, $ten) = @_;
+    if ($unicode) {
+        my $ch = kindle_unicode_hex2chr($unicode);
+        return $ch if $ch;
+        return;
+    }
+    my $ch = kindle_jis2chr(0+$men, 0+$ku, 0+$ten);
+    return $ch if $ch;
+    return;
+}
+
+sub conv_gaiji_title_author {
+    my $s = shift;
+    return $s unless $s;
+    $s =~ s{(.［＃[^、］]*、(U\+([A-Fa-f0-9]+)|.*?(\d)-(\d+)-(\d+)).*?］)}
+           {
+               my $all = $1;
+               my $ch = _conv_gaiji_title_author($3, $4, $5, $6);
+               $ch ? $ch : $all;
+           }esg;
+    return $s
+}
+
 sub new {
     my ($class, $url) = @_;
     my $base = $url;
@@ -235,8 +259,8 @@ sub process_doc {
             push @fig, $path;
         }
     }
-    $self->{title} = $title;
-    $self->{author} = $author;
+    $self->{title} = conv_gaiji_title_author($title);
+    $self->{author} = conv_gaiji_title_author($author);
     $self->{contents} = \@contents;
     $self->{bib_info} = $bib_info || '';
     $self->{notation_notes} = $notation_notes || '';
