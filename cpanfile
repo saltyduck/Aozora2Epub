@@ -6,6 +6,7 @@ requires 'Encode';
 requires 'Encode::JISX0213', '0.04';
 requires 'File::Find';
 requires 'File::ShareDir';
+requires 'File::HomeDir', '1.004';
 requires 'Getopt::Long';
 requires 'HTML::Element';
 requires 'HTTP::Date';

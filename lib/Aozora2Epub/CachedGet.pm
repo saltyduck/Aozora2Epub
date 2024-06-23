@@ -7,6 +7,7 @@ use HTTP::Tiny;
 use Cache::FileCache;
 use Encode qw/decode/;
 use Path::Tiny;
+use File::HomeDir;
 use parent 'Exporter';
 
 our @EXPORT = qw(http_get);
@@ -17,10 +18,17 @@ our $CACHE;
 init_cache();
 
 sub init_cache {
+    my $cache_dir = $ENV{AOZORA2EPUB_CACHE};
+    unless ($cache_dir) {
+        my $home = File::HomeDir->my_home;
+        $home or die "Can't determin home directory. Please set an environment variable AOZORA2EPUB_CACHE\n";
+        $cache_dir = path($home, '.aozora-epub');
+    }
+
     $CACHE = Cache::FileCache->new({
         namespace          => 'aozora',
         default_expires_in => '30 days',
-        cache_root         => $ENV{AOZORA2EPUB_CACHE} || path($ENV{HOME}, '.aozora-epub'),
+        cache_root         => $cache_dir,
         directory_umask => 077,
         auto_purge_interval => '1 day',
     });

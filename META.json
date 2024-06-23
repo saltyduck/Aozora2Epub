@@ -45,6 +45,7 @@
             "Encode" : "0",
             "Encode::JISX0213" : "0.04",
             "File::Find" : "0",
+            "File::HomeDir" : "1.004",
             "File::ShareDir" : "0",
             "Getopt::Long" : "0",
             "HTML::Element" : "0",
