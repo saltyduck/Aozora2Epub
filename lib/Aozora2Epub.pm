@@ -103,7 +103,10 @@ sub append {
     my @files = $doc->split;
     my $part_title;
     unless (defined $options{title}) {
-        $part_title = $doc->title;
+        if ($options{use_subtitle}) {
+            $part_title = $doc->subtitle;
+        }
+        $part_title ||= $doc->title;
     } elsif ($options{title} eq '') {
         $part_title = undef;
     } else {
@@ -298,14 +301,16 @@ C<$bool_url>で指定した青空文庫の本を読み込みます。
 
 =head2 append
 
-  $book->append($book_url);
-  $book->append($book_url, title=>"第2部");
+  $book->append($book_url); # 追加する本のタイトルを章タイトルとして使用
+  $book->append($book_url, use_subtitle=>1); # 追加する本のサブタイトルを章タイトルとして使用
+  $book->append($book_url, title=>"第2部"); # 章タイトルを明示的に指定
   $book->append($book_url, title=>"第2部", title_level=>1); # <h1>第2部</h1>を付加
   $book->append($xhtml_string);
 
 指定した本の内容を追加します。本の指定方法はC<new>メソッドと同じです。
 
-追加される本のタイトルが、追加される本の内容の先頭に C<< <h2>タイトル</h2> >> という形で付加されます。
+追加される本のタイトルが章タイトルとして。追加される本の内容の先頭に C<< <h2>タイトル</h2> >> という形で付加されます。
+このとき、C<use_subtitle>オプションが真値なら、タイトルではなくサブタイトルが使われます。
 C<title>オプションによって、このタイトルを指定することができます。
 C<< title=>'' >>とすると、ヘッダ要素を追加しません。
 C<title_level>オプションで、付加されるヘッダ要素のレベルを変更することができます。

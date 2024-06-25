@@ -56,6 +56,20 @@ use Aozora2Epub::Gensym;
         is $html, book3(), "book";
         done_testing;
     };
+
+    subtest "with subtitle" => sub {
+        my ($title, $author, $html) = do {
+            Aozora2Epub::Gensym->reset_counter;
+            my $book = Aozora2Epub->new();
+            $book->append('02/files/02_000.html', use_subtitle=>1);
+            $book->append('03/files/03_000.html', use_subtitle=>1);
+            ($book->title, $book->author, $book->as_html);
+        };
+        is $title, "テスト-no-toc", "title";
+        is $author, "酔狂亭不出来", "author";
+        is $html, book4(), "book";
+        done_testing;
+    };
 }
 done_testing();
 
@@ -109,6 +123,19 @@ sub book3 {
 <h4 id="g000000003">中見出し2-1</h4>
  どれや。それや。<img class="gaiji" src="../gaiji/1-90/1-90-61.png" />ですね。<br />
 <h2 id="g000000008">part2</h2>
+ あれや。これや。<br />
+ どれや。それや。ですね。<br />
+HTML
+    $html =~ s/\n//sg;
+    return $html
+}
+
+sub book4 {
+    my $html =<<'HTML';
+<h2 id="g000000001">テスト-no-toc</h2>
+ あれや。これや。<br />
+ どれや。それや。ですね。<br />
+<h2 id="g000000003">サブタイトル3</h2>
  あれや。これや。<br />
  どれや。それや。ですね。<br />
 HTML

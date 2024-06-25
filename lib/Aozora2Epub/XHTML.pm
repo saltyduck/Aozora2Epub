@@ -10,7 +10,9 @@ use HTML::Element;
 use Encode::JISX0213;
 use Encode qw/decode/;
 use base qw(Class::Accessor);
-__PACKAGE__->mk_accessors(qw/title author content bib_info notation_notes gaiji fig/);
+__PACKAGE__->mk_accessors(qw/title subtitle author
+                             content
+                             bib_info notation_notes gaiji fig/);
 
 our $VERSION = "0.03";
 
@@ -169,10 +171,14 @@ sub _is_empty {
 sub process_doc {
     my $self = shift;
 
-    my ($title, $author, $bib_info, $notation_notes, @images);
+    my ($title, $subtitle, $author,
+        $bib_info, $notation_notes, @images);
     my @contents = Aozora2Epub::XHTML::Tree->new($self->{raw_content})
         ->process('h1.title', sub {
             $title = shift->as_text;
+        })
+        ->process('h2.subtitle', sub {
+            $subtitle = shift->as_text;
         })
         ->process('h2.author', sub {
             $author = shift->as_text;
@@ -260,6 +266,7 @@ sub process_doc {
         }
     }
     $self->{title} = conv_gaiji_title_author($title);
+    $self->{subtitle} = conv_gaiji_title_author($subtitle);
     $self->{author} = conv_gaiji_title_author($author);
     $self->{contents} = \@contents;
     $self->{bib_info} = $bib_info || '';
