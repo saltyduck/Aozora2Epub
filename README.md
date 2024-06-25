@@ -54,17 +54,26 @@ Aozora2Epub は青空文庫のXHTML形式の本をEPUBに変換するモジュ�
 
 ## append
 
-    $book->append($book_url);
-    $book->append($book_url, title=>"第2部");
-    $book->append($book_url, title=>"第2部", title_level=>1); # <h1>第2部</h1>を付加
+    $book->append($book_url); # 追加する本のタイトルを章タイトルとして使用
+    $book->append($book_url, use_subtitle=>1); # 追加する本のサブタイトルを章タイトルとして使用
+    $book->append($book_url, title=>"第2部"); # 章タイトルを明示的に指定
+    $book->append($book_url, title=>"第2部", title_level=>1); # <h1>第2部</h1>を章タイトルに使用
+    $book->append($book_url, title_html=>'<h1>Part1</h1>><h2>Chapter1<h2>'); # 指定したXHTML章タイトルとして使用
     $book->append($xhtml_string);
 
 指定した本の内容を追加します。本の指定方法は`new`メソッドと同じです。
 
-追加される本のタイトルが、追加される本の内容の先頭に `<h2>タイトル</h2>` という形で付加されます。
+追加される本のタイトルが章タイトルとして。追加される本の内容の先頭に `<h2>タイトル</h2>` という形で付加されます。
+このとき、`use_subtitle`オプションが真値なら、タイトルではなくサブタイトルが使われます。
 `title`オプションによって、このタイトルを指定することができます。
 `title=>''`とすると、ヘッダ要素を追加しません。
 `title_level`オプションで、付加されるヘッダ要素のレベルを変更することができます。
+
+`title_html`オプションを使うと、先頭に加える要素を自由に設定できます。
+このオプションを指定した場合、`title`, `title_level`, `use_subtile`
+はすべて無視されます。
+
+これらのオプションの使用例は、["合本の作成"](#合本の作成)を参照して下さい。
 
 ## title
 
@@ -144,7 +153,7 @@ EPUBを出力します。オプションは以下の通りです。
                   title_level=>1);
     $book->to_epub;
 
-上記のコードは、以下の構造のepubを出力します。
+上記のコードは、6冊の本から合本を作り、以下の目次構造のEPUBを出力します。
 
     序にかえて
     料理する心
@@ -154,6 +163,16 @@ EPUBを出力します。オプションは以下の通りです。
       納豆の茶漬け
       海苔
     あとがき
+
+「料理する心」を中扉にせず、「道は次第に狭し」と同じページにいれるには、上記のコードの
+
+    $book->append(q{<h1 class="tobira">料理する心</h1>}); # 中扉を入れる
+    $book->append("001403/card54984.html"); # 道は次第に狭し
+
+の部分を以下のように変更します。
+
+    $book->append("001403/card54984.html",
+                  title_html=>q{<h1>料理する心</h1><h2>道は次第に狭し</h2>});
 
 # 青空文庫ファイルのキャッシュ
 
