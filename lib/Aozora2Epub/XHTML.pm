@@ -11,7 +11,7 @@ use Encode::JISX0213;
 use Encode qw/decode/;
 use base qw(Class::Accessor);
 __PACKAGE__->mk_accessors(qw/title subtitle author
-                             content
+                             contents
                              bib_info notation_notes gaiji fig/);
 
 our $VERSION = "0.03";
@@ -265,14 +265,14 @@ sub process_doc {
             push @fig, $path;
         }
     }
-    $self->{title} = conv_gaiji_title_author($title);
-    $self->{subtitle} = conv_gaiji_title_author($subtitle);
-    $self->{author} = conv_gaiji_title_author($author);
-    $self->{contents} = \@contents;
-    $self->{bib_info} = $bib_info || '';
-    $self->{notation_notes} = $notation_notes || '';
-    $self->{gaiji} = \@gaiji;
-    $self->{fig} = \@fig;
+    $self->title(conv_gaiji_title_author($title));
+    $self->subtitle(conv_gaiji_title_author($subtitle));
+    $self->author(conv_gaiji_title_author($author));
+    $self->contents(\@contents);
+    $self->bib_info($bib_info || '');
+    $self->notation_notes($notation_notes || '');
+    $self->gaiji(\@gaiji);
+    $self->fig(\@fig);
 }
 
 sub _is_chuuki {
@@ -299,7 +299,7 @@ sub split {
     # <br/>*<h[123]>* / [#改ページ] / [#改丁]
     my @cur;
     my @files;
-    my @contents = @{$self->{contents}};
+    my @contents = @{$self->contents};
     while (my $c = shift @contents) {
         unless ($c->isa('HTML::Element')) {
             push @cur, $c;

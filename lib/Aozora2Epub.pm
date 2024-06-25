@@ -84,6 +84,12 @@ sub _cat_url {
     return URI->new($path)->abs(URI->new($base));
 }
 
+sub _build_elemlist_from_xhtml {
+    my $xhtml = shift;
+    my $tr = Aozora2Epub::XHTML->new_from_string(qq{<div class="main_text">$xhtml</div>});;
+    return @{$tr->contents};
+}
+
 sub append {
     my ($self, $xhtml_like, %options) = @_;
 
@@ -102,20 +108,26 @@ sub append {
     }
     my @files = $doc->split;
     my $part_title;
-    unless (defined $options{title}) {
-        if ($options{use_subtitle}) {
-            $part_title = $doc->subtitle;
-        }
-        $part_title ||= $doc->title;
-    } elsif ($options{title} eq '') {
-        $part_title = undef;
+    if (defined $options{title_html}) {
+        $files[0]->insert_content(_build_elemlist_from_xhtml($options{title_html}));
     } else {
-        $part_title = $options{title};
-    }
-    if ($files[0] && $part_title) {
-        my $title_level = $options{title_level} || 2;
-        my $tag = "h$title_level";
-        $files[0]->insert_content([ $tag, { id => gensym }, $part_title ]);
+        unless (defined $options{title}) {
+            if ($options{use_subtitle}) {
+                $part_title = $doc->subtitle;
+            }
+            $part_title ||= $doc->title;
+        } elsif ($options{title} eq '') {
+            $part_title = undef;
+        } else {
+            $part_title = $options{title};
+        }
+        if ($files[0] && $part_title) {
+            my $title_level = $options{title_level} || 2;
+            my $tag = "h$title_level";
+            my $header_elem = HTML::Element->new_from_lol([ $tag, { id => gensym },
+                                                            $part_title ]);
+            $files[0]->insert_content($header_elem);
+        }
     }
     push @{$self->files}, @files;
     $self->title or $self->title($doc->title);
@@ -211,10 +223,19 @@ sub _toc {
     return \@cur;
 }
 
-sub toc {
+sub _make_toc {
     my $self = shift;
     my ($next, $putback) = _make_content_iterator($self->{files});
     return _toc(1, $next, $putback);
+}
+
+sub toc {
+    my ($self, $toc) = @_;
+    unless ($toc) {
+        $self->{toc} ||= $self->_make_toc;
+        return $self->{toc};
+    }
+    $self->{toc} = $toc;
 }
 
 sub to_epub {
@@ -304,7 +325,8 @@ C<$bool_url>で指定した青空文庫の本を読み込みます。
   $book->append($book_url); # 追加する本のタイトルを章タイトルとして使用
   $book->append($book_url, use_subtitle=>1); # 追加する本のサブタイトルを章タイトルとして使用
   $book->append($book_url, title=>"第2部"); # 章タイトルを明示的に指定
-  $book->append($book_url, title=>"第2部", title_level=>1); # <h1>第2部</h1>を付加
+  $book->append($book_url, title=>"第2部", title_level=>1); # <h1>第2部</h1>を章タイトルに使用
+  $book->append($book_url, title_html=>'<h1>Part1</h1>><h2>Chapter1<h2>'); # 指定したXHTML章タイトルとして使用
   $book->append($xhtml_string);
 
 指定した本の内容を追加します。本の指定方法はC<new>メソッドと同じです。
@@ -314,6 +336,12 @@ C<$bool_url>で指定した青空文庫の本を読み込みます。
 C<title>オプションによって、このタイトルを指定することができます。
 C<< title=>'' >>とすると、ヘッダ要素を追加しません。
 C<title_level>オプションで、付加されるヘッダ要素のレベルを変更することができます。
+
+C<title_html>オプションを使うと、先頭に加える要素を自由に設定できます。
+このオプションを指定した場合、C<title>, C<title_level>, C<use_subtile>
+はすべて無視されます。
+
+これらのオプションの使用例は、L</合本の作成>を参照して下さい。
 
 =head2 title
 
@@ -397,7 +425,7 @@ EPUBを出力します。オプションは以下の通りです。
                 title_level=>1);
   $book->to_epub;
 
-上記のコードは、以下の構造のepubを出力します。
+上記のコードは、6冊の本から合本を作り、以下の目次構造のEPUBを出力します。
 
   序にかえて
   料理する心
@@ -407,6 +435,16 @@ EPUBを出力します。オプションは以下の通りです。
     納豆の茶漬け
     海苔
   あとがき
+
+「料理する心」を中扉にせず、「道は次第に狭し」と同じページにいれるには、上記のコードの
+
+  $book->append(q{<h1 class="tobira">料理する心</h1>}); # 中扉を入れる
+  $book->append("001403/card54984.html"); # 道は次第に狭し
+
+の部分を以下のように変更します。
+
+  $book->append("001403/card54984.html",
+                title_html=>q{<h1>料理する心</h1><h2>道は次第に狭し</h2>});
 
 =head1 青空文庫ファイルのキャッシュ
 

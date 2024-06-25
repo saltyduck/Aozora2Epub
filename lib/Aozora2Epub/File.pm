@@ -31,10 +31,8 @@ sub as_html {
 }
 
 sub insert_content {
-    my ($self, $lol) = @_;
-
-    my $c = HTML::Element->new_from_lol($lol);
-    unshift @{$self->{content}}, $c;
+    my ($self, @c) = @_;
+    unshift @{$self->{content}}, @c;
 }
 
 1;

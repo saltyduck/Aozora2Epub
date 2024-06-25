@@ -70,6 +70,22 @@ use Aozora2Epub::Gensym;
         is $html, book4(), "book";
         done_testing;
     };
+
+    subtest "with title_html" => sub {
+        my ($title, $author, $html) = do {
+            Aozora2Epub::Gensym->reset_counter;
+            my $book = Aozora2Epub->new();
+            $book->append('02/files/02_000.html',
+                          title_html=>'<h1>序</h1><h2>abc</h2>');
+            $book->append('03/files/03_000.html',
+                          title_html=>'<h1>本編</h1><h2>その1</h2>');
+            ($book->title, $book->author, $book->as_html);
+        };
+        is $title, "テスト-no-toc", "title";
+        is $author, "酔狂亭不出来", "author";
+        is $html, book5(), "book";
+        done_testing;
+    };
 }
 done_testing();
 
@@ -136,6 +152,21 @@ sub book4 {
  あれや。これや。<br />
  どれや。それや。ですね。<br />
 <h2 id="g000000003">サブタイトル3</h2>
+ あれや。これや。<br />
+ どれや。それや。ですね。<br />
+HTML
+    $html =~ s/\n//sg;
+    return $html
+}
+
+sub book5 {
+    my $html =<<'HTML';
+<h1 id="g000000001">序</h1>
+<h2 id="g000000002">abc</h2>
+ あれや。これや。<br />
+ どれや。それや。ですね。<br />
+<h1 id="g000000004">本編</h1>
+<h2 id="g000000005">その1</h2>
  あれや。これや。<br />
  どれや。それや。ですね。<br />
 HTML
