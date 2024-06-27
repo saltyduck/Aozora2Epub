@@ -14,7 +14,7 @@ __PACKAGE__->mk_accessors(qw/title subtitle author
                              contents
                              bib_info notation_notes gaiji fig/);
 
-our $VERSION = "0.03";
+our $VERSION = "0.04";
 
 sub jisx0213_to_utf8 {
     my ($men, $ku, $ten) = @_;

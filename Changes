@@ -1,6 +1,8 @@
 Revision history for Aozora2Epub
 
 {{$NEXT}}
+
+0.04  2024-06-27 14:55:53 JST
 	- 外字をUNICODEに置き換える(kindle 5.13.6で表示可能なフォントのみ)
 	- 合本作成時に各本のサブタイトルを使うオプション(--use-subtitle)を追加
 	- aozora2epubに引数を指定しなかった場合、標準入力から引数を読み込む機能を追加
