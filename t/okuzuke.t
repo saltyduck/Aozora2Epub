@@ -17,7 +17,7 @@ sub drop_nlsp {
 
 filters {
     html => 'chomp',
-    expected => 'chomp',
+    expected => ['chomp', 'drop_nlsp'],
 };
 
 run {
@@ -42,7 +42,8 @@ __DATA__
 <br>
 </div>
 --- expected
-奥付<br /> ボランティアの皆さんです。
+奥付<br />
+ボランティアの皆さんです。
 
 === less br
 --- html
@@ -55,4 +56,28 @@ __DATA__
 <br>
 </div>
 --- expected
-底本<br /> ボランティアの皆さんです。
+底本<br />
+ボランティアの皆さんです。
+
+=== zenkaku space indentation
+--- html
+<div class="bibliographical_information">
+<hr>
+<br>
+底本
+<br>
+　　　1985<br>
+底本の親本<br>
+　　　1906<br>
+　　　　　　「國木田獨歩全集　第三卷」<br>
+ボランティアの皆さんです。<br>
+<br>
+</div>
+--- expected
+底本
+<br />
+　　　1985<br />
+底本の親本<br />
+　　　1906<br />
+　　　　　　「國木田獨歩全集　第三卷」<br />
+ボランティアの皆さんです。
